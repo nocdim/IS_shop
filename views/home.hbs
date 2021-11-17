@@ -1,0 +1,50 @@
+{{#if removedProduct}} <!-- EJS -->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Food item has been removed.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+<div class="row pb-2">
+  <div class="col-6"><h3>Food</h3></div>
+  <div class="col-6 d-flex justify-content-end">
+    <a href="/addproduct" type="button" class="btn btn-success btn-small aligh-self-center"><i class="bi bi-person-plus"></i> Add Food item</a>
+
+  </div>
+</div>
+
+
+<table class="table table-bordered table-striped">
+  
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Type</th>
+      <th scope="col">Name</th>
+      <th scope="col">Storage conditions °C</th>
+      <th scope="col">Manufacturer</th>
+      <th scope="col">Price</th>
+      <th scope="col" class="text-center">Action</th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+
+    {{#each rows}}
+    <tr>
+      <th scope="row">{{this.food_id}}</th>
+      <td>{{this.food_type}}</td>
+      <td>{{this.food_name}}</td>
+      <td>{{this.food_storage_conditions}}</td>
+      <td>{{this.food_manufacturer}}</td>
+      <td>${{this.food_price}}</td>
+      <td class="text-center">
+          <a href="/viewproduct/{{this.food_id}}" type="button" class="btn btn-secondary btn-small"><i class="bi bi-eye"></i> View</a>
+          <a href="/editproduct/{{this.food_id}}" type="button" class="btn btn-primary btn-small"><i class="bi bi-pencil"></i> Edit</a>
+          <a onclick="if (!confirm('Do you really want to delete {{this.food_name}}?')) return false" href="/deleteproduct/{{this.food_id}}"  type="button" class="btn btn-danger btn-small"><i class="bi bi-trash"></i> Delete</a>
+    {{/each}}
+
+  </tbody>
+</table>
+

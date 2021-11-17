@@ -1,0 +1,36 @@
+<h1 class="d-flex justify-content-center mb-3">Client orders</h1>
+
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/products">Main</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Client orders</li>
+  </ol>
+</nav>
+
+<table class="table table-bordered table-striped">
+  
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Order number</th>
+      <th scope="col">Client's email</th>
+      <th scope="col">Name</th>
+      <th scope="col">Price ($)</th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+
+    {{#each rows}}
+
+    <tr>
+      <td>{{this.order_id}}</td>
+      <td>{{this.user_email}}</td>
+      <td>{{this.food_name}}</td>
+      <td>{{this.food_price}}</td>  
+    {{/each}}
+
+  </tbody>
+</table>
+

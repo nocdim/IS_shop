@@ -1,0 +1,26 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/products">Food</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New Food item</li>
+  </ol>
+</nav>
+
+{{#if alert}} <!-- EJS -->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{alert}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+
+{{#if errs}} <!-- HBS -->
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{errs}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+
+<form class="row g-3 needs-validation" method="POST" action="/addproduct" novalidate>
+    {{> prod_form}}
+</form>

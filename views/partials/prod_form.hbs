@@ -1,0 +1,55 @@
+<div class="form-group mb-3">
+    <label class="mb-2" for="exampleFormControlSelect1">Type</label>
+    <select class="form-control" id="exampleFormControlSelect1" name="food_type">
+      <option style="color: lightcoral;">{{this.food_type}}</option>
+      <option>Bakery</option>
+      <option>Cheese</option>
+      <option>Meat</option>
+      <option>Fish</option>
+      <option>Fruits/Vegetables</option>
+      <option>Coffee/Tea</option>
+    </select>
+  </div>
+
+
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.food_name}}" placeholder="Name" name="food_name">
+            <label for="floatingInput">Name</label>
+        </div>
+    </div>
+
+
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.food_storage_conditions}}" placeholder="Storage conditions" name="food_storage_conditions">
+            <label for="floatingInput">Storage conditions °C</label>
+        </div>
+    </div>
+
+
+
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.food_manufacturer}}" placeholder="Manufacturer" name="food_manufacturer">
+            <label for="floatingInput">Manufacturer</label>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.food_price}}" placeholder="Price" name="food_price">
+            <label for="floatingInput">Price $</label>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-floating mb-3">
+            <textarea type="text" class="form-control" id="floatingInput" placeholder="Comment" name="food_comment" style="height: 200px;">{{this.food_comment}}</textarea>
+            <label for="floatingInput">Compounds</label>
+        </div>
+    </div>
+    
+    <div class="col-12 d-grid">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-check2"></i> Submit</button>
+    </div>

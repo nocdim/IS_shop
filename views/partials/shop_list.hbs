@@ -1,0 +1,31 @@
+<table class="table table-bordered table-striped">
+  
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="visibility: hidden;">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Storage conditions °C</th>
+      <th scope="col">Manufacturer</th>
+      <th scope="col">Compounds</th>
+      <th scope="col">Price ($)</th>
+      <th scope="col" class="text-center">Action</th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+
+    {{#each rows}}
+    <tr>
+      <td style="visibility: hidden;">{{this.food_id}}</td>
+      <td >{{this.food_name}}</td>
+      <td >{{this.food_storage_conditions}}</td>
+      <td >{{this.food_manufacturer}}</td>
+      <td >{{this.food_comment}}</td>
+      <td >{{this.food_price}}</td>
+      <td class="text-center">
+          <a href="/getproduct/{{this.food_id}}" type="button" class="btn btn-success btn-small"><i class="bi bi-cart"></i> Add to cart</a>
+    {{/each}}
+
+  </tbody>
+</table>
