@@ -1,12 +1,5 @@
 <h1 class="d-flex justify-content-center mb-3">Shopping cart</h1>
 
-{{#if success_buy}} <!-- HBS -->
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  {{success_buy}}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{{/if}}
-
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
@@ -15,11 +8,10 @@
 </nav>
 
 <table class="table table-bordered table-striped">
-  
+
   <thead class="thead-dark">
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
+      <th scope="col">Product</th>
       <th scope="col">Manufacturer</th>
       <th scope="col">Price ($)</th>
       <th scope="col" class="text-center">Action</th>
@@ -31,15 +23,15 @@
 
     {{#each rows}}
     <tr>
-      <td>{{this.id}}</td>
       <td>{{this.food_name}}</td>
       <td>{{this.food_manufacturer}}</td>
       <td>{{this.food_price}}</td>
       <td class="text-center">
-      <a href="shopping_cart_delete/{{this.id}}"  type="button" class="btn btn-danger btn-small"><i class="bi bi-trash"></i> Delete</a>
+        <a href="shopping_cart_delete/{{this.id}}" type="button" class="btn btn-danger btn-small"><i
+            class="bi bi-trash"></i> Delete</a>
       </td>
-      
-    {{/each}}
+
+      {{/each}}
 
   </tbody>
 </table>
@@ -47,6 +39,7 @@
 <div class="row pb-2">
   <div class="col-6"></div>
   <div class="col-6 d-flex justify-content-end">
-    <a href="/buy"  type="button" class="btn btn-success btn-small aligh-self-center"><i class="bi bi-cart-check"></i> Purchase</a>
+    <a href="/buy" type="button" class="btn btn-success btn-small aligh-self-center"><i class="bi bi-cart-check"></i>
+      Purchase</a>
   </div>
 </div>

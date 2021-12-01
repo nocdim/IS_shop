@@ -8,29 +8,48 @@
   </ol>
 </nav>
 
-<table class="table table-bordered table-striped">
-  
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Order number</th>
-      <th scope="col">Client's email</th>
-      <th scope="col">Name</th>
-      <th scope="col">Price ($)</th>
-    </tr>
-  </thead>
+{{#each rows}}
+
+<div class="accordion accordion-flush" id="accordionExample">
+  <div class="accordion-item border border-seccondary">
+    <h2 class="accordion-header" id="flush-headingOne">
+
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#flush-collapse{{this.order_id}}" aria-expanded="false"
+        aria-controls="flush-collapse{{this.order_id}}">
+        Order#{{this.order_id}}
+      </button>
+    </h2>
+    <div id="flush-collapse{{this.order_id}}" class="accordion-collapse collapse"
+      aria-labelledby="flush-heading{{this.order_id}}" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        <table class="table table-bordered table-striped">
+
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Order number</th>
+              <th scope="col">Client's email</th>
+              <th scope="col">Products</th>
+              <th scope="col">Price ($)</th>
+            </tr>
+          </thead>
 
 
-  <tbody>
+          <tbody>
 
-    {{#each rows}}
 
-    <tr>
-      <td>{{this.order_id}}</td>
-      <td>{{this.user_email}}</td>
-      <td>{{this.food_name}}</td>
-      <td>{{this.food_price}}</td>  
-    {{/each}}
 
-  </tbody>
-</table>
+            <tr>
+              <td>{{this.order_id}}</td>
+              <td>{{this.user_email}}</td>
+              <td>{{this.products}}</td>
+              <td>{{this.price}}</td>
 
+
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+  {{/each}}

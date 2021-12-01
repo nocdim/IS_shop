@@ -7,14 +7,16 @@
 
 <h2 class="d-flex justify-content-center mb-3">Creating your account</h2>
 
-{{#if success}} <!-- HBS -->
+{{#if success}}
+<!-- HBS -->
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   {{success}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {{/if}}
 
-{{#if warning}} <!-- HBS -->
+{{#if warning}}
+<!-- HBS -->
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
   {{warning}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -22,7 +24,8 @@
 {{/if}}
 
 
-{{#if errs}} <!-- HBS -->
+{{#if errs}}
+<!-- HBS -->
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
   {{errs}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -33,36 +36,39 @@
 
 <form action="/register" method="POST">
 
-<div class="form-group">
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingInput" value="" placeholder="Username" name="user_username">
-            <label for="floatingInput">Username</label>
-        </div>
-</div>
+  <div class="form-group">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="floatingInput" value="" placeholder="Username" name="user_username">
+      <label for="floatingInput">Username</label>
+    </div>
+  </div>
 
-<div class="form-group pt-1 pb-1">
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" value="" placeholder="example@email.com" name="user_email">
-            <label for="floatingInput">Email</label>
-        </div>
-</div>
+  <div class="form-group pt-1 pb-1">
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="floatingInput" value="" placeholder="example@email.com"
+        name="user_email">
+      <label for="floatingInput">Email</label>
+    </div>
+  </div>
 
-<div class="form-group pt-1 pb-1">
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="user_password" value="" placeholder="Username" name="user_password">
-            <label for="floatingInput">Password</label>
-        </div>
-</div>
+  <div class="form-group pt-1 pb-1">
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="user_password" value="" placeholder="Username"
+        name="user_password">
+      <label for="floatingInput">Password</label>
+    </div>
+  </div>
 
-<div class="form-group pt-1 pb-1">
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="user_password1" value="" placeholder="Username" name="user_password1">
-            <label for="floatingInput">Confirm password</label>
-        </div>
-</div>
-  
+  <div class="form-group pt-1 pb-1">
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="user_password1" value="" placeholder="Username"
+        name="user_password1">
+      <label for="floatingInput">Confirm password</label>
+    </div>
+  </div>
+
   <div class="pt-3">
     <button type="submit" class="btn btn-primary">Submit</button>
   </div>
-  
+
 </form>

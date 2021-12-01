@@ -1,0 +1,73 @@
+const express = require('express')
+const router = express.Router()
+const bodyParser = require('body-parser')
+const { check, validationResult } = require('express-validator')
+
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+const adminController = require('../controllers/adminController')
+
+router.get('/loginemployee', adminController.login_employee) // вход
+router.post('/loginemployee', urlencodedParser, [
+    check('user_username', 'Field "Username" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('user_password', 'Field "Password" is empty')
+        .exists()
+        .isLength({ min: 1 })
+], adminController.login_employee_complete) // вход завершен
+
+// create, read, update, delete
+router.get('/products', adminController.view) // Просмотр
+router.post('/products', adminController.search) // Поиск
+
+router.get('/addproduct', adminController.add_product) // Добавление
+router.post('/addproduct', urlencodedParser, [
+    check('food_type', 'Field "Type" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_name', 'Field "Name" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_storage_conditions', 'Field "Compounds" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_manufacturer', 'Field "Manufacturer" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_price', 'Field "Price" must consist of numbers')
+        .exists()
+        .isNumeric(),
+    check('food_comment', 'Field "Compounds" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+], adminController.create_product) // Добавление
+
+router.get('/editproduct/:food_id', adminController.edit_product)  // Изменение
+router.post('/editproduct/:food_id', urlencodedParser, [
+    check('food_name', 'Field "Name" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_storage_conditions', 'Field "Compounds" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_manufacturer', 'Field "Manufacturer" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('food_price', 'Field "Price" must consist of numbers')
+        .exists()
+        .isNumeric(),
+    check('food_comment', 'Field "Compounds" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+], adminController.update_product) // Сохранение изменения
+
+router.get('/viewproduct/:food_id', adminController.view_product) // Конкретный просмотр
+
+router.get('/deleteproduct/:food_id', adminController.delete_product) // Удаление
+
+router.get('/orders', adminController.view_orders) // просмотр заказов клиентов
+
+router.get('/logout_admin', adminController.logout_admin) // Выход из системы (админ)
+
+module.exports = router

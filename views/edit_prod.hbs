@@ -1,12 +1,13 @@
-
-{{#if alert}} <!-- EJS -->
+{{#if alert}}
+<!-- EJS -->
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
   {{alert}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {{/if}}
 
-{{#if errs}} <!-- HBS -->
+{{#if errs}}
+<!-- HBS -->
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
   {{errs}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -15,10 +16,6 @@
 
 {{#each rows}}
 <form class="row g-3 needs-validation" method="POST" action="/editproduct/{{this.food_id}}" novalidate>
-    {{> prod_form}}
+  {{> prod_form}}
 </form>
 {{/each}}
-
-
-
-
