@@ -129,9 +129,13 @@ exports.get_product = async (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err
         else console.log('Connected as ID ' + connection.threadId)
-
-        //Query запросы к БД
-        if (!err) {
+        
+        connection.query('UPDATE products SET food_quantity = food_quantity-1 WHERE food_id = ?', [req.params.food_id], (err, rows) => {
+            connection.release()
+            if(err){
+                console.log(err)
+            }      
+        
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
@@ -149,10 +153,7 @@ exports.get_product = async (req, res) => {
                     }
                 })
             })
-        }
-        else {
-            console.log(err)
-        }
+        })
     })
 }
 
@@ -166,7 +167,7 @@ exports.bakery = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "bakery"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "bakery" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -174,7 +175,7 @@ exports.bakery = async (req, res) => {
                         res.render('products/bakery', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -198,7 +199,7 @@ exports.cheese = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "cheese"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "cheese" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -206,7 +207,7 @@ exports.cheese = async (req, res) => {
                         res.render('products/cheese', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -230,7 +231,7 @@ exports.meat = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "meat"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "meat" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -238,7 +239,7 @@ exports.meat = async (req, res) => {
                         res.render('products/meat', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -270,7 +271,7 @@ exports.fish = async (req, res) => {
                         res.render('products/fish', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -294,7 +295,7 @@ exports.vegetables_fruits = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "Fruits/Vegetables"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "Fruits/Vegetables" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -302,7 +303,7 @@ exports.vegetables_fruits = async (req, res) => {
                         res.render('products/vegetables_fruits', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -326,7 +327,7 @@ exports.coffee_tea = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "Coffee/Tea"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "Coffee/Tea" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -334,7 +335,7 @@ exports.coffee_tea = async (req, res) => {
                         res.render('products/coffee_tea', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                     else {
-                        res.render('not_found', { rows, userUsername, title: 'Shopping', layout: 'shopping' })
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
                     }
                 }
                 else {
@@ -380,14 +381,20 @@ exports.shopping_cart = async (req, res) => {
 
 exports.shopping_cart_delete = async (req, res) => {
 
-
-
     pool.getConnection((err, connection) => {
         if (err) throw err
         else console.log('Connected as ID ' + connection.threadId)
 
-        //Query запросы к БД
+        connection.query('UPDATE products p LEFT JOIN products_orders po ON p.food_id = po.food_id SET p.food_quantity = p.food_quantity+1 WHERE po.id = ?', [req.params.id], (err, rows) => {
+            connection.release()
+            if(err){
+                console.log(err)
+            }
 
+        //Query запросы к БД
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
 
         connection.query('DELETE FROM products_orders WHERE id = ?', [req.params.id], (err, rows) => {
             connection.release()
@@ -399,6 +406,8 @@ exports.shopping_cart_delete = async (req, res) => {
                 console.log(err)
             }
         })
+    })
+    })
     })
 }
 

@@ -35,12 +35,17 @@ router.post('/addproduct', urlencodedParser, [
     check('food_manufacturer', 'Field "Manufacturer" is empty')
         .exists()
         .isLength({ min: 1 }),
-    check('food_price', 'Field "Price" must consist of numbers')
+    check('food_price', 'Field "Price" is invalid')
         .exists()
-        .isNumeric(),
+        .isNumeric()
+        .isFloat({ min: 0 }),
     check('food_comment', 'Field "Compounds" is empty')
         .exists()
         .isLength({ min: 1 }),
+    check('food_quantity', 'Field "Quantity" is invalid')
+        .exists()
+        .isNumeric()
+        .isInt({ min: 0 }),
 ], adminController.create_product) // Добавление
 
 router.get('/editproduct/:food_id', adminController.edit_product)  // Изменение
@@ -54,12 +59,17 @@ router.post('/editproduct/:food_id', urlencodedParser, [
     check('food_manufacturer', 'Field "Manufacturer" is empty')
         .exists()
         .isLength({ min: 1 }),
-    check('food_price', 'Field "Price" must consist of numbers')
+    check('food_price', 'Field "Price" is invalid')
         .exists()
-        .isNumeric(),
+        .isNumeric()
+        .isFloat({ min: 0 }),
     check('food_comment', 'Field "Compounds" is empty')
         .exists()
         .isLength({ min: 1 }),
+    check('food_quantity', 'Field "Quantity" is invalid')
+        .exists()
+        .isNumeric()
+        .isInt({ min: 0 }),
 ], adminController.update_product) // Сохранение изменения
 
 router.get('/viewproduct/:food_id', adminController.view_product) // Конкретный просмотр

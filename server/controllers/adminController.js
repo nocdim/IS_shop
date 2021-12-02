@@ -133,19 +133,22 @@ exports.create_product = async (req, res) => {
         if (!errors.isEmpty()) {
             let errs = []
             for (let objs of errors.array()) {
-                errs.push(' ' + objs.msg + ' ')
+                // удаляем дубликаты ошибок
+                if (!(errs.includes(' ' + objs.msg + ' '))){
+                    errs.push(' ' + objs.msg + ' ')
+                }
             }
             res.render('add_prod', { errs })
         }
         else {
-            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type } = req.body
+            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity } = req.body
 
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
 
                 //Query запросы к БД
-                connection.query('INSERT INTO products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type], (err, rows) => {
+                connection.query('INSERT INTO products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ?, food_quantity = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity], (err, rows) => {
                     connection.release()
 
                     if (!err) {
@@ -176,7 +179,8 @@ exports.edit_product = async (req, res) => {
                 connection.release()
 
                 if (!err) {
-                    res.render('edit_prod', { rows })
+                    let error = req.query.error
+                    res.render('edit_prod', { rows, error })
                 }
                 else {
                     console.log(err)
@@ -190,25 +194,29 @@ exports.edit_product = async (req, res) => {
 }
 // Обновление 
 exports.update_product = async (req, res) => {
-
+    
     if (adminIsAuth) {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
+            let food_id = req.params.food_id
             let errs = []
             for (let objs of errors.array()) {
-                errs.push(' ' + objs.msg + ' ')
-            }
-            res.render('add_prod', { errs })
+                // удаляем дубликаты ошибок
+                if (!(errs.includes(' ' + objs.msg + ' '))){
+                    errs.push(' ' + objs.msg + ' ')
+                }
+            }       
+            res.redirect(`/editproduct/${food_id}` + '?error=' + errs)
         }
         else {
-            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type } = req.body
+            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity } = req.body
 
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
 
                 //Query запросы к БД
-                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, req.params.food_id], (err, rows) => {
+                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ?, food_quantity = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity, req.params.food_id], (err, rows) => {
                     connection.release()
 
                     if (!err) {
