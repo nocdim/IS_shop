@@ -38,7 +38,7 @@ router.post('/addproduct', urlencodedParser, [
     check('food_price', 'Field "Price" is invalid')
         .exists()
         .isNumeric()
-        .isFloat({ min: 0 }),
+        .isFloat({ min: 0.1 }),
     check('food_comment', 'Field "Compounds" is empty')
         .exists()
         .isLength({ min: 1 }),
