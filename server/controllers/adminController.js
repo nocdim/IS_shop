@@ -98,7 +98,7 @@ exports.search = async (req, res) => {
 
         let search = req.body.search
         //Query запросы к БД
-        connection.query('SELECT * FROM products WHERE food_name LIKE ? OR food_type LIKE ?', ['%' + search + '%', search], (err, rows) => {
+        connection.query('SELECT * FROM products WHERE food_name LIKE ? OR category_name LIKE ?', ['%' + search + '%','%' + search + '%'], (err, rows) => {
             connection.release()
 
             if (!err) {
@@ -119,7 +119,23 @@ exports.search = async (req, res) => {
 // Новый 
 exports.add_product = async (req, res) => {
     if (adminIsAuth) {
-        res.render('add_prod', { layout: 'main_no_search' })
+
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT category_name FROM categories', [], (err, rows) => {
+                connection.release()
+                
+                if (!err) {
+                    res.render('add_prod', { rows ,layout: 'main_no_search' })
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
     }
     else {
         res.redirect('/')
@@ -138,27 +154,53 @@ exports.create_product = async (req, res) => {
                     errs.push(' ' + objs.msg + ' ')
                 }
             }
-            res.render('add_prod', { errs, layout: 'main_no_search' })
-        }
-        else {
-            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity } = req.body
 
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
-
+    
                 //Query запросы к БД
-                connection.query('INSERT INTO products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ?, food_quantity = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity], (err, rows) => {
+                connection.query('SELECT category_name FROM categories', [], (err, rows) => {
                     connection.release()
-
+                    
                     if (!err) {
-                        res.render('add_prod', { alert: 'Food item added successfully.', layout: 'main_no_search' })
+                        res.render('add_prod', { errs, rows, layout: 'main_no_search' })
                     }
                     else {
                         console.log(err)
                     }
                 })
             })
+        }
+        else {
+            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity } = req.body
+
+            pool.getConnection((err, connection) => {
+                if (err) throw err
+                else console.log('Connected as ID ' + connection.threadId)
+
+                //Query запросы к БД
+                connection.query('INSERT INTO products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, category_name = ?, food_quantity = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity], (err, rows) => {
+                    connection.release()
+
+                    pool.getConnection((err, connection) => {
+                        if (err) throw err
+                        else console.log('Connected as ID ' + connection.threadId)
+                        
+                    connection.query('SELECT category_name FROM categories', [], (err, rows) => {
+                        connection.release()
+                        if(err) console.log(err)
+                    
+                    if (!err) {
+                        res.render('add_prod', { rows, alert: 'Food item added successfully.', layout: 'main_no_search' })
+                    }
+                    else {
+                        console.log(err)
+                    }
+                })
+            })
+        })
+    })
         }
     }
     else {
@@ -209,14 +251,14 @@ exports.update_product = async (req, res) => {
             res.redirect(`/editproduct/${food_id}` + '?error=' + errs)
         }
         else {
-            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity } = req.body
+            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity } = req.body
 
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
 
                 //Query запросы к БД
-                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, food_type = ?, food_quantity = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity, req.params.food_id], (err, rows) => {
+                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, category_name = ?, food_quantity = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity, req.params.food_id], (err, rows) => {
                     connection.release()
 
                     if (!err) {

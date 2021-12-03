@@ -1,13 +1,10 @@
 <div class="form-group mb-3">
     <label class="mb-2" for="exampleFormControlSelect1">Type</label>
-    <select class="form-control" id="exampleFormControlSelect1" name="food_type">
-        <option style="color: lightcoral;">{{this.food_type}}</option>
-        <option>Bakery</option>
-        <option>Cheese</option>
-        <option>Meat</option>
-        <option>Fish</option>
-        <option>Fruits/Vegetables</option>
-        <option>Coffee/Tea</option>
+    <select class="form-control" id="exampleFormControlSelect1" name="category_name">
+        <option style="color: lightcoral;">{{this.category_name}}</option>
+        {{#each rows}}
+        <option>{{this.category_name}}</option>
+        {{/each}}
     </select>
 </div>
 <div class="col-6">

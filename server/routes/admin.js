@@ -23,7 +23,7 @@ router.post('/products', adminController.search) // Поиск
 
 router.get('/addproduct', adminController.add_product) // Добавление
 router.post('/addproduct', urlencodedParser, [
-    check('food_type', 'Field "Type" is empty')
+    check('category_name', 'Field "Type" is empty')
         .exists()
         .isLength({ min: 1 }),
     check('food_name', 'Field "Name" is empty')
