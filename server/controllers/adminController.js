@@ -119,7 +119,7 @@ exports.search = async (req, res) => {
 // Новый 
 exports.add_product = async (req, res) => {
     if (adminIsAuth) {
-        res.render('add_prod')
+        res.render('add_prod', { layout: 'main_no_search' })
     }
     else {
         res.redirect('/')
@@ -138,7 +138,7 @@ exports.create_product = async (req, res) => {
                     errs.push(' ' + objs.msg + ' ')
                 }
             }
-            res.render('add_prod', { errs })
+            res.render('add_prod', { errs, layout: 'main_no_search' })
         }
         else {
             const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, food_type, food_quantity } = req.body
@@ -152,7 +152,7 @@ exports.create_product = async (req, res) => {
                     connection.release()
 
                     if (!err) {
-                        res.render('add_prod', { alert: 'Food item added successfully.' })
+                        res.render('add_prod', { alert: 'Food item added successfully.', layout: 'main_no_search' })
                     }
                     else {
                         console.log(err)
@@ -180,7 +180,7 @@ exports.edit_product = async (req, res) => {
 
                 if (!err) {
                     let error = req.query.error
-                    res.render('edit_prod', { rows, error })
+                    res.render('edit_prod', { rows, error, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -229,7 +229,7 @@ exports.update_product = async (req, res) => {
                                 connection.release()
 
                                 if (!err) {
-                                    res.render('edit_prod', { rows, alert: `${food_name} has been updated` })
+                                    res.render('edit_prod', { rows, alert: `${food_name} has been updated`, layout: 'main_no_search' })
                                 }
                                 else {
                                     console.log(err)
@@ -290,7 +290,7 @@ exports.view_product = async (req, res) => {
                 connection.release()
 
                 if (!err) {
-                    res.render('view_prod', { rows })
+                    res.render('view_prod', { rows, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -318,7 +318,7 @@ exports.view_orders = async (req, res) => {
             connection.query('SELECT o.order_id, u.user_email, GROUP_CONCAT(p.food_name SEPARATOR ", ") AS products, SUM(p.food_price) AS price, o.order_date, o.order_pay_type FROM orders o LEFT JOIN users u ON o.user_id = u.user_id LEFT JOIN products_orders po ON o.order_id = po.order_id LEFT JOIN products p ON po.food_id = p.food_id WHERE po.status = "processing" GROUP BY order_id HAVING COUNT(1) >= 1', [], (err, rows) => {
                 connection.release()
                 if (!err) {
-                    res.render('orders', { rows })
+                    res.render('orders', { rows, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
