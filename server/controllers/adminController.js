@@ -315,7 +315,7 @@ exports.view_orders = async (req, res) => {
         pool.getConnection((err, connection) => {
             if (err) throw err
             else console.log('Connected as ID ' + connection.threadId)
-            connection.query('SELECT o.order_id, u.user_email, GROUP_CONCAT(p.food_name SEPARATOR ", ") AS products, SUM(p.food_price) AS price FROM orders o LEFT JOIN users u ON o.user_id = u.user_id LEFT JOIN products_orders po ON o.order_id = po.order_id LEFT JOIN products p ON po.food_id = p.food_id WHERE po.status = "processing" GROUP BY order_id HAVING COUNT(1) > 1', [], (err, rows) => {
+            connection.query('SELECT o.order_id, u.user_email, GROUP_CONCAT(p.food_name SEPARATOR ", ") AS products, SUM(p.food_price) AS price, o.order_date, o.order_pay_type FROM orders o LEFT JOIN users u ON o.user_id = u.user_id LEFT JOIN products_orders po ON o.order_id = po.order_id LEFT JOIN products p ON po.food_id = p.food_id WHERE po.status = "processing" GROUP BY order_id HAVING COUNT(1) >= 1', [], (err, rows) => {
                 connection.release()
                 if (!err) {
                     res.render('orders', { rows })

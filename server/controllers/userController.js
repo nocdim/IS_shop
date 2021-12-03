@@ -2,6 +2,7 @@ const mysql = require('mysql')
 const { check, validationResult } = require('express-validator')
 const e = require('express')
 const sha256 = require('sha256')
+
 let isAuth = false
 let userUsername = ''
 let userId = 0
@@ -129,13 +130,13 @@ exports.get_product = async (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err
         else console.log('Connected as ID ' + connection.threadId)
-        
+
         connection.query('UPDATE products SET food_quantity = food_quantity-1 WHERE food_id = ?', [req.params.food_id], (err, rows) => {
             connection.release()
-            if(err){
+            if (err) {
                 console.log(err)
-            }      
-        
+            }
+
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
@@ -263,7 +264,7 @@ exports.fish = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "fish"', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_type = "fish" AND food_quantity > 0', (err, rows) => {
                 connection.release()
 
                 if (!err) {
@@ -387,38 +388,46 @@ exports.shopping_cart_delete = async (req, res) => {
 
         connection.query('UPDATE products p LEFT JOIN products_orders po ON p.food_id = po.food_id SET p.food_quantity = p.food_quantity+1 WHERE po.id = ?', [req.params.id], (err, rows) => {
             connection.release()
-            if(err){
+            if (err) {
                 console.log(err)
             }
 
-        //Query запросы к БД
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
+            //Query запросы к БД
+            pool.getConnection((err, connection) => {
+                if (err) throw err
+                else console.log('Connected as ID ' + connection.threadId)
 
-        connection.query('DELETE FROM products_orders WHERE id = ?', [req.params.id], (err, rows) => {
-            connection.release()
+                connection.query('DELETE FROM products_orders WHERE id = ?', [req.params.id], (err, rows) => {
+                    connection.release()
 
-            if (!err) {
-                res.redirect('/shopping_cart')
-            }
-            else {
-                console.log(err)
-            }
+                    if (!err) {
+                        res.redirect('/shopping_cart')
+                    }
+                    else {
+                        console.log(err)
+                    }
+                })
+            })
         })
-    })
-    })
     })
 }
 
 exports.buy = async (req, res) => {
 
+    const { order_pay_type } = req.body
+
+    // let date = new Date()
+    // exact_time = date.getDate() + '.' + date.getMonth() + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()
+    // console.log(exact_time)
+
     pool.getConnection((err, connection) => {
         if (err) throw err
         else console.log('Connected as ID ' + connection.threadId)
 
-        connection.query('INSERT INTO orders SET user_id = ?', [userId], (err, rows) => {
+        connection.query('INSERT INTO orders SET user_id = ?, order_pay_type = ?, order_date = Now()', [userId, order_pay_type], (err) => {
             connection.release()
+
+            if (err) console.log(err)
         })
     })
 

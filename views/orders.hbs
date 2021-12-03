@@ -27,25 +27,22 @@
 
           <thead class="thead-dark">
             <tr>
-              <th scope="col">Order number</th>
               <th scope="col">Client's email</th>
               <th scope="col">Products</th>
               <th scope="col">Price ($)</th>
+              <th scope="col">Order date</th>
+              <th scope="col">Type of payment</th>
             </tr>
           </thead>
 
 
           <tbody>
-
-
-
             <tr>
-              <td>{{this.order_id}}</td>
               <td>{{this.user_email}}</td>
               <td>{{this.products}}</td>
               <td>{{this.price}}</td>
-
-
+              <td>{{this.order_date}}</td>
+              <td>{{this.order_pay_type}}</td>
           </tbody>
         </table>
 

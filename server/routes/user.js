@@ -53,7 +53,7 @@ router.get('/shopping_cart', userController.shopping_cart) // корзина п�
 
 router.get('/shopping_cart_delete/:id', userController.shopping_cart_delete) // удаление продукта из корзины
 
-router.get('/buy', userController.buy) // оформление покупки
+router.post('/buy', userController.buy) // оформление покупки
 
 router.get('/logout', userController.logout) // выход из системы
 
