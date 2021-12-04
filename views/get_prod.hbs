@@ -1,11 +1,15 @@
+{{#each rows}}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Bakery products</li>
+    <li class="breadcrumb-item active" aria-current="page">{{this.category_name}}</li>
   </ol>
 </nav>
 
-<h1 class="d-flex justify-content-center mb-3">Bakery products</h1>
+<h1 class="d-flex justify-content-center mb-3">{{this.category_name}}</h1>
+{{/each}}
+
+{{> shop_list}}
 
 {{#if addedProduct}}
 <!-- EJS -->
@@ -14,5 +18,3 @@
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {{/if}}
-
-{{> shop_list}}

@@ -35,19 +35,9 @@ router.post('/login', urlencodedParser, [
 
 router.get('/shop', userController.shop) // страница магазина
 
-router.get('/getproduct/:food_id', userController.get_product) // Добавление в корзину
+router.get('/getproduct/:category_name', userController.get_product) // Конкретный просмотр
 
-router.get('/bakery', userController.bakery) // раздел
-
-router.get('/cheese', userController.cheese) // раздел
-
-router.get('/meat', userController.meat) // раздел
-
-router.get('/fish', userController.fish) // раздел
-
-router.get('/vegetables_fruits', userController.vegetables_fruits) // раздел
-
-router.get('/coffee_tea', userController.coffee_tea) // раздел
+router.get('/buyproduct/:food_id', userController.buy_product) // Добавление в корзину
 
 router.get('/shopping_cart', userController.shopping_cart) // корзина покупок
 

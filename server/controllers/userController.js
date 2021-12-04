@@ -118,7 +118,20 @@ exports.login_complete = async (req, res) => {
 exports.shop = async (req, res) => {
     if (isAuth) {
         let addedProduct = req.query.added
-        res.render('shop', { userUsername, addedProduct, title: 'Shopping', layout: 'shopping' })
+
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT * FROM categories', [], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    res.render('shop', { rows, userUsername, addedProduct, title: 'Shopping', layout: 'shopping' })
+                }
+            })
+        })
     }
     else {
         res.redirect('/')
@@ -126,6 +139,37 @@ exports.shop = async (req, res) => {
 }
 
 exports.get_product = async (req, res) => {
+    if (isAuth) {
+        page = req.url
+        let addedProduct = req.query.added
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT * FROM products WHERE category_name = ? AND food_quantity > 0', [req.params.category_name], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    if (rows.length != 0) {
+                        res.render('get_prod', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
+                    }
+                    else {
+                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
+                    }
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+exports.buy_product = async (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
