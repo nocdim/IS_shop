@@ -2,6 +2,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser') // middleware (прежде чем запрос обработается сервером, запрос проходит через middleware (является ли пользователь админом))
 const mysql = require('mysql')
+const fileUpload = require('express-fileupload')
 
 require('dotenv').config() //Конфигурация БД
 
