@@ -1,0 +1,13 @@
+<h2 class="d-flex justify-content-center pb-3">Thank you for ordering!</h2>
+
+{{#if success_buy}}
+<!-- HBS -->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{success_buy}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+<div class="d-flex justify-content-center pt-3">
+    <a href="/shop" type="button" class="btn btn-primary btn-small"><i class="bi bi-caret-left-fill"></i> Main Page</a>
+</div>

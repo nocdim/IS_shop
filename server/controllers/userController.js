@@ -202,198 +202,6 @@ exports.buy_product = async (req, res) => {
     })
 }
 
-exports.bakery = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "bakery" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/bakery', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-exports.cheese = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "cheese" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/cheese', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-exports.meat = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "meat" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/meat', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-exports.fish = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "fish" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/fish', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-exports.vegetables_fruits = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "Fruits/Vegetables" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/vegetables_fruits', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-exports.coffee_tea = async (req, res) => {
-
-    if (isAuth) {
-        page = req.url
-        let addedProduct = req.query.added
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_type = "Coffee/Tea" AND food_quantity > 0', (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    if (rows.length != 0) {
-                        res.render('products/coffee_tea', { rows, addedProduct, userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                    else {
-                        res.render('out_of_stock', { userUsername, title: 'Shopping', layout: 'shopping' })
-                    }
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
 exports.shopping_cart = async (req, res) => {
 
     if (isAuth) {
@@ -460,10 +268,6 @@ exports.buy = async (req, res) => {
 
     const { order_pay_type } = req.body
 
-    // let date = new Date()
-    // exact_time = date.getDate() + '.' + date.getMonth() + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()
-    // console.log(exact_time)
-
     pool.getConnection((err, connection) => {
         if (err) throw err
         else console.log('Connected as ID ' + connection.threadId)
@@ -485,7 +289,7 @@ exports.buy = async (req, res) => {
 
             if (!err) {
                 let success_buy = 'Your order is now processing. We will contact you through email as soon as possible!'
-                res.render('shop', { userUsername, success_buy, title: 'Shopping', layout: 'shopping' })
+                res.render('success', { userUsername, success_buy, title: 'Shopping', layout: 'shopping' })
             }
             else {
                 console.log(err)
