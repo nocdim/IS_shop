@@ -90,6 +90,33 @@ exports.view = async (req, res) => {
     }
 }
 
+exports.view_categories = async (req, res) => {
+
+    if (adminIsAuth) {
+        //Подключаемся к БД
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT * FROM categories', (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    let removedProduct = req.query.removed
+                    res.render('categories', { rows, removedProduct, layout: 'main_no_search' })
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
 // Поиск
 exports.search = async (req, res) => {
     pool.getConnection((err, connection) => {
@@ -98,7 +125,7 @@ exports.search = async (req, res) => {
 
         let search = req.body.search
         //Query запросы к БД
-        connection.query('SELECT * FROM products WHERE food_name LIKE ? OR category_name LIKE ?', ['%' + search + '%','%' + search + '%'], (err, rows) => {
+        connection.query('SELECT * FROM products WHERE food_name LIKE ? OR category_name LIKE ?', ['%' + search + '%', '%' + search + '%'], (err, rows) => {
             connection.release()
 
             if (!err) {
@@ -127,9 +154,9 @@ exports.add_product = async (req, res) => {
             //Query запросы к БД
             connection.query('SELECT category_name FROM categories', [], (err, rows) => {
                 connection.release()
-                
+
                 if (!err) {
-                    res.render('add_prod', { rows ,layout: 'main_no_search' })
+                    res.render('add_prod', { rows, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -150,7 +177,7 @@ exports.create_product = async (req, res) => {
             let errs = []
             for (let objs of errors.array()) {
                 // удаляем дубликаты ошибок
-                if (!(errs.includes(' ' + objs.msg + ' '))){
+                if (!(errs.includes(' ' + objs.msg + ' '))) {
                     errs.push(' ' + objs.msg + ' ')
                 }
             }
@@ -158,11 +185,11 @@ exports.create_product = async (req, res) => {
             pool.getConnection((err, connection) => {
                 if (err) throw err
                 else console.log('Connected as ID ' + connection.threadId)
-    
+
                 //Query запросы к БД
                 connection.query('SELECT category_name FROM categories', [], (err, rows) => {
                     connection.release()
-                    
+
                     if (!err) {
                         res.render('add_prod', { errs, rows, layout: 'main_no_search' })
                     }
@@ -186,22 +213,31 @@ exports.create_product = async (req, res) => {
                     pool.getConnection((err, connection) => {
                         if (err) throw err
                         else console.log('Connected as ID ' + connection.threadId)
-                        
-                    connection.query('SELECT category_name FROM categories', [], (err, rows) => {
-                        connection.release()
-                        if(err) console.log(err)
-                    
-                    if (!err) {
-                        res.render('add_prod', { rows, alert: 'Food item added successfully.', layout: 'main_no_search' })
-                    }
-                    else {
-                        console.log(err)
-                    }
+
+                        connection.query('SELECT category_name FROM categories', [], (err, rows) => {
+                            connection.release()
+                            if (err) console.log(err)
+
+                            if (!err) {
+                                res.render('add_prod', { rows, alert: 'Food item added successfully.', layout: 'main_no_search' })
+                            }
+                            else {
+                                console.log(err)
+                            }
+                        })
+                    })
                 })
             })
-        })
-    })
         }
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+exports.add_category = async (req, res) => {
+    if (adminIsAuth) {
+        res.render('add_categ', { layout: 'main_no_search' })
     }
     else {
         res.redirect('/')
@@ -236,7 +272,7 @@ exports.edit_product = async (req, res) => {
 }
 // Обновление 
 exports.update_product = async (req, res) => {
-    
+
     if (adminIsAuth) {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
@@ -244,10 +280,10 @@ exports.update_product = async (req, res) => {
             let errs = []
             for (let objs of errors.array()) {
                 // удаляем дубликаты ошибок
-                if (!(errs.includes(' ' + objs.msg + ' '))){
+                if (!(errs.includes(' ' + objs.msg + ' '))) {
                     errs.push(' ' + objs.msg + ' ')
                 }
-            }       
+            }
             res.redirect(`/editproduct/${food_id}` + '?error=' + errs)
         }
         else {
@@ -290,7 +326,6 @@ exports.update_product = async (req, res) => {
         res.redirect('/')
     }
 }
-
 
 // Удаление 
 exports.delete_product = async (req, res) => {
