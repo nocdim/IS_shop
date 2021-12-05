@@ -1,7 +1,7 @@
 const mysql = require('mysql')
 const { validationResult } = require('express-validator')
 const sha256 = require('sha256')
-const fileUpload = require('express-fileupload')
+const validator = require('../middleware/validator')
 
 
 let adminIsAuth = false
@@ -248,25 +248,33 @@ exports.add_category = async (req, res) => {
 exports.create_category = async (req, res) => {
 
     if (adminIsAuth) {
+        let errs = []
+        let noImage
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            let errs = []
             for (let objs of errors.array()) {
                 // удаляем дубликаты ошибок
                 if (!(errs.includes(' ' + objs.msg + ' '))) {
                     errs.push(' ' + objs.msg + ' ')
                 }
             }
+        }
 
+        let sampleFile
+        let uploadPath
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            noImage = ' No image uploaded'
+            errs.push(noImage)
+        }
+
+        if (errs.length > 0) {
             res.render('add_categ', { errs, layout: 'main_no_search' })
         }
+
         else {
-
-            let sampleFile = req.files.sampleFile
-            let uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
-
-            console.log(sampleFile)
-            console.log(req.files.sampleFile)
+            sampleFile = req.files.sampleFile
+            uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
 
             sampleFile.mv(uploadPath, (err) => {
                 if (err) console.log(err)
@@ -291,9 +299,8 @@ exports.create_category = async (req, res) => {
                 })
 
             })
-
-
         }
+
     }
     else {
         res.redirect('/')

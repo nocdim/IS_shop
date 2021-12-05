@@ -23,9 +23,9 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
+      <th scope="col">Image</th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
-      <th scope="col">Image link</th>
       <th scope="col">Image alternative text</th>
       <th scope="col" class="text-center">Action</th>
     </tr>
@@ -36,11 +36,11 @@
     {{#each rows}}
     <tr>
       <th scope="row">{{this.category_id}}</th>
-      <td>{{this.category_name}}</td>
-      <td>{{this.category_desc}}</td>
-      <td>{{this.category_image_link}}</td>
-      <td>{{this.category_alt}}</td>
-      <td class="text-center">
+      <td class="text-center align-middle"><img style="width: 80px; height: 100px;" src="categ_images/{{this.category_image_link}}" alt="{{this.category_alt}}"></td>
+      <td class="text-center align-middle">{{this.category_name}}</td>
+      <td class="text-center align-middle">{{this.category_desc}}</td>
+      <td class="text-center align-middle">{{this.category_alt}}</td>
+      <td class="text-center align-middle">
         <a href="/editcategory/{{this.category_id}}" type="button" class="btn btn-primary btn-small"><i
             class="bi bi-pencil"></i> Edit</a>
         <a onclick="if (!confirm('Do you really want to delete {{this.category_name}}?')) return false"
