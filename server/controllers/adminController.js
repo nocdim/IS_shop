@@ -257,19 +257,16 @@ exports.create_category = async (req, res) => {
                     errs.push(' ' + objs.msg + ' ')
                 }
             }
+
             res.render('add_categ', { errs, layout: 'main_no_search' })
         }
         else {
 
-            let sampleFile
-            let uploadPath
+            let sampleFile = req.files.sampleFile
+            let uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
 
-            if (!req.files || Object.keys(req.files).length === 0){
-                return res.status(400).send('No files were uploaded')
-            }
-
-            sampleFile = req.files.sampleFile
-            uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
+            console.log(sampleFile)
+            console.log(req.files.sampleFile)
 
             sampleFile.mv(uploadPath, (err) => {
                 if (err) console.log(err)

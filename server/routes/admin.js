@@ -3,6 +3,7 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const { check, validationResult } = require('express-validator')
 
+
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const adminController = require('../controllers/adminController')
