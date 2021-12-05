@@ -51,31 +51,17 @@ router.post('/addproduct', urlencodedParser, [
 router.get('/categories', adminController.view_categories) // Просмотр
 
 router.get('/addcategory', adminController.add_category) // Добавление
-// router.post('/addcategory', urlencodedParser, [
-//     check('category_name', 'Field "Type" is empty')
-//         .exists()
-//         .isLength({ min: 1 }),
-//     check('food_name', 'Field "Name" is empty')
-//         .exists()
-//         .isLength({ min: 1 }),
-//     check('food_storage_conditions', 'Field "Compounds" is empty')
-//         .exists()
-//         .isLength({ min: 1 }),
-//     check('food_manufacturer', 'Field "Manufacturer" is empty')
-//         .exists()
-//         .isLength({ min: 1 }),
-//     check('food_price', 'Field "Price" is invalid')
-//         .exists()
-//         .isNumeric()
-//         .isFloat({ min: 0.1 }),
-//     check('food_comment', 'Field "Compounds" is empty')
-//         .exists()
-//         .isLength({ min: 1 }),
-//     check('food_quantity', 'Field "Quantity" is invalid')
-//         .exists()
-//         .isNumeric()
-//         .isInt({ min: 0 }),
-// ], adminController.create_category) // Добавление
+router.post('/addcategory', urlencodedParser, [
+    check('category_name', 'Field "Name" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('category_desc', 'Field "Description" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+    check('category_alt', 'Field "Alternative text" is empty')
+        .exists()
+        .isLength({ min: 1 }),
+], adminController.create_category) // Добавление
 
 router.get('/editproduct/:food_id', adminController.edit_product)  // Изменение
 router.post('/editproduct/:food_id', urlencodedParser, [

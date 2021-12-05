@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //Parse application/json (разбираем json)
 app.use(bodyParser.json())
 
+app.use(fileUpload())
+
 // Подгружаем статичные файлы
 app.use(express.static('public'))
 
@@ -41,12 +43,12 @@ pool.getConnection((err, connection) => {
 })
 
 //Маршрутизация (Routing) для пользователя
-const auth_routes = require('./server/routes/user')
-app.use('/', auth_routes)
+const user_routes = require('./server/routes/user')
+app.use('/', user_routes)
 
 //Маршрутизация (Routing) для админа
-const product_routes = require('./server/routes/admin')
-app.use('/', product_routes)
+const admin_routes = require('./server/routes/admin')
+app.use('/', admin_routes)
 
 app.listen(port, () => {
     console.log('Server operating... PORT: ' + port)

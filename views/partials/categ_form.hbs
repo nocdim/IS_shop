@@ -1,28 +1,26 @@
 <div class="col-6">
     <div class="form-floating mb-3">
         <input type="text" class="form-control" id="floatingInput" value="{{this.category_name}}" placeholder="Name"
-            name="food_name">
+            name="category_name">
         <label for="floatingInput">Name</label>
     </div>
 </div>
 <div class="col-6">
     <div class="form-floating mb-3">
         <input type="text" class="form-control" id="floatingInput" value="{{this.category_desc}}"
-            placeholder="Storage conditions" name="food_storage_conditions">
+            placeholder="Storage conditions" name="category_desc">
         <label for="floatingInput">Description</label>
     </div>
 </div>
-<div class="col-6">
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingInput" value="{{this.category_image_link}}"
-            placeholder="Manufacturer" name="food_manufacturer">
-        <label for="floatingInput">Image link</label>
+<div class="col-3">
+    <div class="d-flex align-items-lg-center">
+        <input type="file" name="sampleFile" accept="image/*" class="form-control" />
     </div>
 </div>
-<div class="col-6">
+<div class="col-3">
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingInput" value="{{this.category_alt}}" placeholder="Price"
-            name="food_price">
+        <input type="text" class="form-control" id="floatingInput" value="{{this.category_alt}}" placeholder="Alternative text"
+            name="category_alt">
         <label for="floatingInput">Alternative text</label>
     </div>
 </div>

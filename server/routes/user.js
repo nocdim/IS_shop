@@ -20,7 +20,8 @@ router.post('/register', urlencodedParser, [ // вывод данных о ре�
     check('user_password', 'Your password must be 8+ character long')
         .exists()
         .isLength({ min: 8 }),
-    check('user_password1', 'Your passwords must match').custom((value, { req }) => (value === req.body.user_password))
+    check('user_password1', 'Your passwords must match')
+        .custom((value, { req }) => (value === req.body.user_password))
 ], userController.register_complete)
 
 router.get('/login', userController.login) // вход

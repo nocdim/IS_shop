@@ -1,7 +1,8 @@
 const mysql = require('mysql')
 const { check, validationResult } = require('express-validator')
-const e = require('express')
 const sha256 = require('sha256')
+const fileUpload = require('express-fileupload')
+
 
 let adminIsAuth = false
 
@@ -238,6 +239,64 @@ exports.create_product = async (req, res) => {
 exports.add_category = async (req, res) => {
     if (adminIsAuth) {
         res.render('add_categ', { layout: 'main_no_search' })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+exports.create_category = async (req, res) => {
+
+    if (adminIsAuth) {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            let errs = []
+            for (let objs of errors.array()) {
+                // удаляем дубликаты ошибок
+                if (!(errs.includes(' ' + objs.msg + ' '))) {
+                    errs.push(' ' + objs.msg + ' ')
+                }
+            }
+            res.render('add_categ', { errs, layout: 'main_no_search' })
+        }
+        else {
+
+            let sampleFile
+            let uploadPath
+
+            if (!req.files || Object.keys(req.files).length === 0){
+                return res.status(400).send('No files were uploaded')
+            }
+
+            sampleFile = req.files.sampleFile
+            uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
+
+            sampleFile.mv(uploadPath, (err) => {
+                if (err) console.log(err)
+
+                const { category_name, category_desc, category_alt } = req.body
+
+                pool.getConnection((err, connection) => {
+                    if (err) throw err
+                    else console.log('Connected as ID ' + connection.threadId)
+
+                    //Query запросы к БД
+                    connection.query('INSERT INTO categories SET category_name = ?, category_desc = ?, category_image_link = ?, category_alt = ?', [category_name, category_desc, sampleFile.name, category_alt], (err, rows) => {
+                        connection.release()
+
+                        if (!err) {
+                            res.render('add_categ', { alert: 'Category added successfully.', layout: 'main_no_search' })
+                        }
+                        else {
+                            console.log(err)
+                        }
+                    })
+                })
+
+            })
+
+
+        }
     }
     else {
         res.redirect('/')
