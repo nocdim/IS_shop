@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const { check, validationResult } = require('express-validator')
+const { validationResult } = require('express-validator')
 const sha256 = require('sha256')
 const fileUpload = require('express-fileupload')
 

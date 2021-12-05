@@ -1,38 +1,20 @@
 const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
-const { check, validationResult } = require('express-validator')
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const userController = require('../controllers/userController')
 
+const validator = require('../middleware/validator')
+
 router.get('/', userController.welcome) // Начальная страница (вход)
 
 router.get('/register', userController.register) // регистрация
-router.post('/register', urlencodedParser, [ // вывод данных о регистрации в объекте
-    check('user_username', 'Your username must be 3+ character long')
-        .exists()
-        .isLength({ min: 3 }),
-    check('user_email', 'Email is not valid')
-        .isEmail()
-        .normalizeEmail(),
-    check('user_password', 'Your password must be 8+ character long')
-        .exists()
-        .isLength({ min: 8 }),
-    check('user_password1', 'Your passwords must match')
-        .custom((value, { req }) => (value === req.body.user_password))
-], userController.register_complete)
+router.post('/register', urlencodedParser, validator.register, userController.register_complete)
 
 router.get('/login', userController.login) // вход
-router.post('/login', urlencodedParser, [
-    check('user_username', 'Field "Username" is empty')
-        .exists()
-        .isLength({ min: 1 }),
-    check('user_password', 'Field "Password" is empty')
-        .exists()
-        .isLength({ min: 1 })
-], userController.login_complete) // вход завершен
+router.post('/login', urlencodedParser, validator.login, userController.login_complete) // вход завершен
 
 router.get('/shop', userController.shop) // страница магазина
 
