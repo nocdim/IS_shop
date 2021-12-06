@@ -1,28 +1,40 @@
+{{#if this.category_image_link}}
 <div class="col-3">
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingInput" value="{{this.category_name}}" placeholder="Name"
-            name="category_name">
-        <label for="floatingInput">Name</label>
-    </div>
+    <figure class="figure">
+        <img src="/categ_images/{{this.category_image_link}}" class="figure-img img-fluid rounded"
+            style="width: 320px; height: 400px;" alt="{{this.category_alt}}">
+        <figcaption class="figure-caption">Image of a category.</figcaption>
+    </figure>
 </div>
-<div class="col-9">
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingInput" value="{{this.category_desc}}"
-            placeholder="Storage conditions" name="category_desc">
-        <label for="floatingInput">Description</label>
+{{/if}}
+<div class="col">
+    <div class="col">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.category_name}}" placeholder="Name"
+                name="category_name">
+            <label for="floatingInput">Name</label>
+        </div>
     </div>
-</div>
-<div class="col-3">
-    <div class="d-flex align-items-lg-center">
-        <input type="file" name="sampleFile" accept="image/*" class="form-control" />
+    <div class="col">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.category_desc}}"
+                placeholder="Storage conditions" name="category_desc">
+            <label for="floatingInput">Description</label>
+        </div>
     </div>
-</div>
-<div class="col-9">
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingInput" value="{{this.category_alt}}" placeholder="Alternative text"
-            name="category_alt">
-        <label for="floatingInput">Alternative text</label>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" value="{{this.category_alt}}"
+                placeholder="Alternative text" name="category_alt">
+            <label for="floatingInput">Alternative text</label>
+        </div>
     </div>
+    <div class="col ">
+        <div class="mb-3">
+            <input type="file" name="sampleFile" accept="image/*" class="form-control" />
+        </div>
+    </div>
+
 </div>
 <div class="col-12 d-grid">
     <button class="btn btn-primary" type="submit"><i class="bi bi-check2"></i> Submit</button>

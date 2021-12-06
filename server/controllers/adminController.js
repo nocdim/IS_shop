@@ -333,6 +333,33 @@ exports.edit_product = async (req, res) => {
         res.redirect('/')
     }
 }
+
+exports.edit_category = async (req, res) => {
+
+    if (adminIsAuth) {
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT * FROM categories WHERE category_id = ?', [req.params.category_id], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    let error = req.query.error
+                    res.render('edit_categ', { rows, error, layout: 'main_no_search' })
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
 // Обновление 
 exports.update_product = async (req, res) => {
 
