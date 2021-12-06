@@ -14,8 +14,16 @@
 </div>
 {{/if}}
 
+{{#if success}}
+<!-- HBS -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{success}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
 {{#each rows}}
-<form class="row g-3 needs-validation" method="POST" action="/editproduct/{{this.food_id}}" novalidate>
+<form class="row g-3 needs-validation" method="POST" action="/editcategory/{{this.category_id}}" enctype="multipart/form-data" novalidate>
   {{> categ_form}}
 </form>
 {{/each}}

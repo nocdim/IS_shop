@@ -320,8 +320,9 @@ exports.edit_product = async (req, res) => {
                 connection.release()
 
                 if (!err) {
+                    let success = req.query.nice
                     let error = req.query.error
-                    res.render('edit_prod', { rows, error, layout: 'main_no_search' })
+                    res.render('edit_prod', { rows, success, error, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -347,7 +348,8 @@ exports.edit_category = async (req, res) => {
 
                 if (!err) {
                     let error = req.query.error
-                    res.render('edit_categ', { rows, error, layout: 'main_no_search' })
+                    let success = req.query.nice
+                    res.render('edit_categ', { rows, success, error, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -361,13 +363,91 @@ exports.edit_category = async (req, res) => {
 }
 
 // Обновление 
+exports.update_category = async (req, res) => {
+
+    if (adminIsAuth) {
+        let errs = []
+        let category_id = req.params.category_id
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            for (let objs of errors.array()) {
+                // удаляем дубликаты ошибок
+                if (!(errs.includes(' ' + objs.msg + ' '))) {
+                    errs.push(' ' + objs.msg + ' ')
+                }
+            }
+            res.redirect(`/editcategory/${category_id}` + '?error=' + errs)
+        }
+
+        let sampleFile
+        let uploadPath
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            const { category_name, category_desc, category_alt } = req.body
+
+                pool.getConnection((err, connection) => {
+                    if (err) throw err
+                    else console.log('Connected as ID ' + connection.threadId)
+
+                    //Query запросы к БД
+                    connection.query('UPDATE categories SET category_name = ?, category_desc = ?, category_alt = ? WHERE category_id = ?', [category_name, category_desc, category_alt, req.params.category_id], (err, rows) => {
+                        connection.release()
+
+                        if (!err) {
+                            let success = `${category_name} has been updated`
+                            res.redirect(`/editcategory/${category_id}` + '?nice=' + success)
+                        }
+                        else {
+                            console.log(err)
+                        }
+                    })
+                })
+        }
+
+        else {
+            
+            sampleFile = req.files.sampleFile
+            uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
+
+            sampleFile.mv(uploadPath, (err) => {
+                if (err) console.log(err)
+
+                const { category_name, category_desc, category_alt } = req.body
+
+                pool.getConnection((err, connection) => {
+                    if (err) throw err
+                    else console.log('Connected as ID ' + connection.threadId)
+
+                    //Query запросы к БД
+                    connection.query('UPDATE categories SET category_name = ?, category_desc = ?, category_image_link = ?, category_alt = ? WHERE category_id = ?', [category_name, category_desc, sampleFile.name, category_alt, req.params.category_id], (err, rows) => {
+                        connection.release()
+
+                        if (!err) {
+                            let success = `${category_name} has been updated`
+                            res.redirect(`/editcategory/${category_id}` + '?nice=' + success)
+                        }
+                        else {
+                            console.log(err)
+                        }
+                    })
+                })
+
+            })
+        }
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+// Обновление 
 exports.update_product = async (req, res) => {
 
     if (adminIsAuth) {
+        let errs = []
+        let food_id = req.params.food_id
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            let food_id = req.params.food_id
-            let errs = []
             for (let objs of errors.array()) {
                 // удаляем дубликаты ошибок
                 if (!(errs.includes(' ' + objs.msg + ' '))) {
@@ -388,22 +468,8 @@ exports.update_product = async (req, res) => {
                     connection.release()
 
                     if (!err) {
-                        pool.getConnection((err, connection) => {
-                            if (err) throw err
-                            else console.log('Connected as ID ' + connection.threadId)
-
-                            //Query запросы к БД
-                            connection.query('SELECT * FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
-                                connection.release()
-
-                                if (!err) {
-                                    res.render('edit_prod', { rows, alert: `${food_name} has been updated`, layout: 'main_no_search' })
-                                }
-                                else {
-                                    console.log(err)
-                                }
-                            })
-                        })
+                        let success = `${food_name} has been updated`
+                        res.redirect(`/editproduct/${food_id}` + '?nice=' + success)
                     }
                     else {
                         console.log(err)
