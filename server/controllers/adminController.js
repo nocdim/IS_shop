@@ -104,8 +104,8 @@ exports.view_categories = async (req, res) => {
                 connection.release()
 
                 if (!err) {
-                    let removedProduct = req.query.removed
-                    res.render('categories', { rows, removedProduct, layout: 'main_no_search' })
+                    let removedCategory = req.query.removed
+                    res.render('categories', { rows, removedCategory, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -405,7 +405,7 @@ exports.update_category = async (req, res) => {
         }
 
         else {
-            
+
             sampleFile = req.files.sampleFile
             uploadPath = 'C:/Users/nokku/Desktop/kurs/public/categ_images/' + sampleFile.name
 
@@ -498,6 +498,32 @@ exports.delete_product = async (req, res) => {
                 if (!err) {
                     let removedProduct = encodeURIComponent('Food item successfully removed.')
                     res.redirect('/products?removed=' + removedProduct)
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+exports.delete_category = async (req, res) => {
+
+    if (adminIsAuth) {
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('DELETE FROM categories WHERE category_id = ?', [req.params.category_id], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    let removedCategory = encodeURIComponent('Category successfully removed.')
+                    res.redirect('/categories?removed=' + removedCategory)
                 }
                 else {
                     console.log(err)

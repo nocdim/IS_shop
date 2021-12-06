@@ -33,6 +33,8 @@ router.post('/addcategory', urlencodedParser, validator.category, adminControlle
 router.get('/editcategory/:category_id', adminController.edit_category)  // Изменение
 router.post('/editcategory/:category_id', urlencodedParser, validator.category, adminController.update_category) // Сохранение изменения
 
+router.get('/deletecategory/:category_id', adminController.delete_category) // Удаление
+
 router.get('/orders', adminController.view_orders) // просмотр заказов клиентов
 
 router.get('/logout_admin', adminController.logout_admin) // Выход из системы (админ)
