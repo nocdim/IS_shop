@@ -91,7 +91,7 @@ exports.view = async (req, res) => {
     }
 }
 
-exports.view_categories = async (req, res) => {
+exports.view_product = async (req, res) => {
 
     if (adminIsAuth) {
         //Подключаемся к БД
@@ -100,12 +100,11 @@ exports.view_categories = async (req, res) => {
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('SELECT * FROM categories', (err, rows) => {
+            connection.query('SELECT * FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
                 connection.release()
 
                 if (!err) {
-                    let removedCategory = req.query.removed
-                    res.render('categories', { rows, removedCategory, layout: 'main_no_search' })
+                    res.render('view_prod', { rows, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -236,6 +235,104 @@ exports.create_product = async (req, res) => {
     }
 }
 
+// Изменение 
+exports.edit_product = async (req, res) => {
+
+    if (adminIsAuth) {
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('SELECT * FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    let success = req.query.nice
+                    let error = req.query.error
+                    res.render('edit_prod', { rows, success, error, layout: 'main_no_search' })
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+// Обновление 
+exports.update_product = async (req, res) => {
+
+    if (adminIsAuth) {
+        let errs = []
+        let food_id = req.params.food_id
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            for (let objs of errors.array()) {
+                // удаляем дубликаты ошибок
+                if (!(errs.includes(' ' + objs.msg + ' '))) {
+                    errs.push(' ' + objs.msg + ' ')
+                }
+            }
+            res.redirect(`/editproduct/${food_id}` + '?error=' + errs)
+        }
+        else {
+            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity } = req.body
+
+            pool.getConnection((err, connection) => {
+                if (err) throw err
+                else console.log('Connected as ID ' + connection.threadId)
+
+                //Query запросы к БД
+                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, category_name = ?, food_quantity = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity, req.params.food_id], (err, rows) => {
+                    connection.release()
+
+                    if (!err) {
+                        let success = `${food_name} has been updated`
+                        res.redirect(`/editproduct/${food_id}` + '?nice=' + success)
+                    }
+                    else {
+                        console.log(err)
+                    }
+                })
+            })
+        }
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+// Удаление 
+exports.delete_product = async (req, res) => {
+
+    if (adminIsAuth) {
+        pool.getConnection((err, connection) => {
+            if (err) throw err
+            else console.log('Connected as ID ' + connection.threadId)
+
+            //Query запросы к БД
+            connection.query('DELETE FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
+                connection.release()
+
+                if (!err) {
+                    let removedProduct = encodeURIComponent('Food item successfully removed.')
+                    res.redirect('/products?removed=' + removedProduct)
+                }
+                else {
+                    console.log(err)
+                }
+            })
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
 exports.add_category = async (req, res) => {
     if (adminIsAuth) {
         res.render('add_categ', { layout: 'main_no_search' })
@@ -307,33 +404,6 @@ exports.create_category = async (req, res) => {
     }
 }
 
-// Изменение 
-exports.edit_product = async (req, res) => {
-
-    if (adminIsAuth) {
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    let success = req.query.nice
-                    let error = req.query.error
-                    res.render('edit_prod', { rows, success, error, layout: 'main_no_search' })
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
 
 exports.edit_category = async (req, res) => {
 
@@ -440,64 +510,21 @@ exports.update_category = async (req, res) => {
     }
 }
 
-// Обновление 
-exports.update_product = async (req, res) => {
+exports.view_categories = async (req, res) => {
 
     if (adminIsAuth) {
-        let errs = []
-        let food_id = req.params.food_id
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            for (let objs of errors.array()) {
-                // удаляем дубликаты ошибок
-                if (!(errs.includes(' ' + objs.msg + ' '))) {
-                    errs.push(' ' + objs.msg + ' ')
-                }
-            }
-            res.redirect(`/editproduct/${food_id}` + '?error=' + errs)
-        }
-        else {
-            const { food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity } = req.body
-
-            pool.getConnection((err, connection) => {
-                if (err) throw err
-                else console.log('Connected as ID ' + connection.threadId)
-
-                //Query запросы к БД
-                connection.query('UPDATE products SET food_name = ?, food_comment = ?, food_storage_conditions = ?, food_manufacturer = ?, food_price = ?, category_name = ?, food_quantity = ? WHERE food_id = ?', [food_name, food_comment, food_storage_conditions, food_manufacturer, food_price, category_name, food_quantity, req.params.food_id], (err, rows) => {
-                    connection.release()
-
-                    if (!err) {
-                        let success = `${food_name} has been updated`
-                        res.redirect(`/editproduct/${food_id}` + '?nice=' + success)
-                    }
-                    else {
-                        console.log(err)
-                    }
-                })
-            })
-        }
-    }
-    else {
-        res.redirect('/')
-    }
-}
-
-// Удаление 
-exports.delete_product = async (req, res) => {
-
-    if (adminIsAuth) {
+        //Подключаемся к БД
         pool.getConnection((err, connection) => {
             if (err) throw err
             else console.log('Connected as ID ' + connection.threadId)
 
             //Query запросы к БД
-            connection.query('DELETE FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
+            connection.query('SELECT * FROM categories', (err, rows) => {
                 connection.release()
 
                 if (!err) {
-                    let removedProduct = encodeURIComponent('Food item successfully removed.')
-                    res.redirect('/products?removed=' + removedProduct)
+                    let removedCategory = req.query.removed
+                    res.render('categories', { rows, removedCategory, layout: 'main_no_search' })
                 }
                 else {
                     console.log(err)
@@ -536,31 +563,7 @@ exports.delete_category = async (req, res) => {
     }
 }
 
-exports.view_product = async (req, res) => {
 
-    if (adminIsAuth) {
-        //Подключаемся к БД
-        pool.getConnection((err, connection) => {
-            if (err) throw err
-            else console.log('Connected as ID ' + connection.threadId)
-
-            //Query запросы к БД
-            connection.query('SELECT * FROM products WHERE food_id = ?', [req.params.food_id], (err, rows) => {
-                connection.release()
-
-                if (!err) {
-                    res.render('view_prod', { rows, layout: 'main_no_search' })
-                }
-                else {
-                    console.log(err)
-                }
-            })
-        })
-    }
-    else {
-        res.redirect('/')
-    }
-}
 
 // НЕ НАЙДЕНО
 exports.not_found = async (req, res) => {
