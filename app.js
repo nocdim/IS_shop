@@ -4,6 +4,18 @@ const bodyParser = require('body-parser') // middleware (прежде чем з�
 const mysql = require('mysql')
 const fileUpload = require('express-fileupload')
 
+const directories = [
+    './views/categories',
+    './views/login',
+    './views/logout',
+    './views/main',
+    './views/orders',
+    './views/partials',
+    './views/products',
+    './views/register',
+    './views/shop'
+]
+
 require('dotenv').config() //Конфигурация БД
 
 const app = express()
@@ -23,7 +35,7 @@ app.use(express.static('public'))
 
 // Шаблонизатор (генерация html страниц через шаблоны) Templating Engine
 app.engine('hbs', exphbs({ extname: '.hbs' }))  // Настраиваем расширение файла (handlebars --> hbs)
-app.set('views', './views') // указываем путь к директории с шаблонами
+app.set('views', directories) // указываем путь к директории с шаблонами
 app.set('view engine', 'hbs')
 
 //Создаем пул подключений (Connection Pool)
