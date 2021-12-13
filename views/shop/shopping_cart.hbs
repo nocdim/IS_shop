@@ -29,27 +29,29 @@
         <a href="shopping_cart_delete/{{this.id}}" type="button" class="btn btn-danger btn-small"><i
             class="bi bi-trash"></i> Delete</a>
       </td>
-
       {{/each}}
 
   </tbody>
 </table>
 
+
+
 <form action="/order_sent" method="POST">
 
-<div class="form-group mb-3">
+  <div class="form-group mb-3">
     <label class="mb-2" for="exampleFormControlSelect1">Type of payment</label>
     <select class="form-control" id="order_pay_type" name="order_pay_type">
-        <option>Cash (when courier arrives)</option>
-        <option>Credit card (right now)</option>
-        <option>Credit cart (when courier arrives)</option>
+      <option>Cash (when courier arrives)</option>
+      <option>Credit card (right now)</option>
+      <option>Credit cart (when courier arrives)</option>
     </select>
-</div>
-
-<div class="row pb-2">
-  <div class="col-6"></div>
-  <div class="col-6 d-flex justify-content-end">
-    <button type="submit" class="btn btn-success btn-small aligh-self-center"><i class="bi bi-cart-check"></i> Purchase</button>
   </div>
-</div>
+
+  <div class="row pb-2">
+    <div class="col-6"></div>
+    <div class="col-6 d-flex justify-content-end">
+      <button type="submit" class="btn btn-success btn-small aligh-self-center"><i class="bi bi-cart-check"></i>
+        Purchase</button>
+    </div>
+  </div>
 </form>

@@ -1,8 +1,6 @@
 const mysql = require('mysql')
 const { validationResult } = require('express-validator')
 const sha256 = require('sha256')
-const validator = require('../middleware/validator')
-
 
 let adminIsAuth = false
 

@@ -1,6 +1,5 @@
 const mysql = require('mysql')
 const { validationResult } = require('express-validator')
-const e = require('express')
 const sha256 = require('sha256')
 
 let isAuth = false
